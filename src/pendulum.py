@@ -54,7 +54,7 @@ class DoublePendulum:
         self.y2 = self.y1 - params.l1 * np.cos(self.the2_sol)
         
     
-    def load(self):    
+    def load(self, display_data=False):    
         # Load in the double pendulum
         self.pendulum1, = self.ax.plot([0, self.x1[0]], [0, self.y1[0]], color=self.color, lw=2)
         self.mass1, = self.ax.plot([self.x1[0]], [self.y1[0]], 'o', markersize=2*self.params.m1, color=self.color)
@@ -62,16 +62,18 @@ class DoublePendulum:
         self.pendulum2, = self.ax.plot([self.x1[0], self.x2[0]], [self.y1[0], self.y2[0]], color=self.color, lw=2)
         self.mass2, = self.ax.plot([self.x2[0]], [self.y2[0]], 'o', markersize=2*self.params.m2, color=self.color)
         
-        self.theta1_text = self.ax.text(
-            0.95, 0.05, f'θ1: {self.the1_sol[0]}',
-            verticalalignment='bottom', horizontalalignment='right',
-            transform=self.ax.transAxes,
-            color='green', fontsize=10)
-        self.theta2_text = self.ax.text(
-            0.95, 0.01, f'θ2: {self.the2_sol[0]}',
-            verticalalignment='bottom', horizontalalignment='right',
-            transform=self.ax.transAxes,
-            color='green', fontsize=10)
+        self.display_data = display_data
+        if display_data:
+            self.theta1_text = self.ax.text(
+                0.95, 0.05, f'θ1: {self.the1_sol[0]}',
+                verticalalignment='bottom', horizontalalignment='right',
+                transform=self.ax.transAxes,
+                color='green', fontsize=10)
+            self.theta2_text = self.ax.text(
+                0.95, 0.01, f'θ2: {self.the2_sol[0]}',
+                verticalalignment='bottom', horizontalalignment='right',
+                transform=self.ax.transAxes,
+                color='green', fontsize=10)
 
         
     def update(self, frame):
@@ -82,7 +84,8 @@ class DoublePendulum:
         self.pendulum2.set_data([self.x1[frame], self.x2[frame]], [self.y1[frame], self.y2[frame]])
         self.mass2.set_data([self.x2[frame]], [self.y2[frame]])
         
-        self.theta1_text.set_text(f'θ1: {self.the1_sol[frame]:.3f}')
-        self.theta2_text.set_text(f'θ2: {self.the2_sol[frame]:.3f}')
+        if self.display_data:
+            self.theta1_text.set_text(f'θ1: {self.the1_sol[frame]:.3f}')
+            self.theta2_text.set_text(f'θ2: {self.the2_sol[frame]:.3f}')
         
         return  self.pendulum1, self.mass1, self.pendulum2, self.mass2    
