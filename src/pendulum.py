@@ -5,7 +5,7 @@ Pendulum Classes
 from dataclasses import dataclass
 import numpy as np
 from scipy.integrate import odeint
-from physics import system_of_odes
+from physics.double import system_of_odes
 
 @dataclass
 class DPendulumParameters:

@@ -2,7 +2,7 @@ from sympy import diff, sin, cos
 import sympy as sm
 
 """
-Contains all the physics and math necessary to process the simulation.
+Contains all the physics and math necessary for a double pendulum
 """
 
 # Create sympy variables
