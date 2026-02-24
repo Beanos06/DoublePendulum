@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from pendulum import DoublePendulum, DPendulumParameters
 import numpy as np
-from physics import system_of_odes
+from physics.double_pendulum import double_pendulum_ODE
 
 # Create time points and initial conditions
 G = 9.81
@@ -26,7 +26,7 @@ initial_conditions = [THETA1, VEL1, THETA2, VEL2]
 DP1 = DoublePendulum(
     initial_conditions=initial_conditions,
     params=parameters,
-    func=system_of_odes,
+    func=double_pendulum_ODE,
     dt=0.01,
     color='blue'
 )

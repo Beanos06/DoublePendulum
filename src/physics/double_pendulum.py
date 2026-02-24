@@ -65,7 +65,7 @@ solutions = sm.solve([EL_eq1, EL_eq2], theta1_dd, theta2_dd)
 EL_fn1 = sm.lambdify((theta1, theta2, theta1_d, theta2_d, t, l_1, l_2, m_1, m_2, g), solutions[theta1_dd])
 EL_fn2 = sm.lambdify((theta1, theta2, theta1_d, theta2_d, t, l_1, l_2, m_1, m_2, g), solutions[theta2_dd])
 
-def system_of_odes(t, y, params):
+def double_pendulum_ODE(t, y, params):
     """
     System of ODEs representing the motion of a double pendulum
     """
