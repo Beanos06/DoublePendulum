@@ -1,5 +1,7 @@
+from pendulum import DPendulumParameters
 from sympy import diff, sin, cos
 import sympy as sm
+from numpy.typing import NDArray
 import numpy as np
 
 """
@@ -65,7 +67,11 @@ solutions = sm.solve([EL_eq1, EL_eq2], theta1_dd, theta2_dd)
 EL_fn1 = sm.lambdify((theta1, theta2, theta1_d, theta2_d, t, l_1, l_2, m_1, m_2, g), solutions[theta1_dd])
 EL_fn2 = sm.lambdify((theta1, theta2, theta1_d, theta2_d, t, l_1, l_2, m_1, m_2, g), solutions[theta2_dd])
 
-def double_pendulum_ODE(t, y, params):
+def double_pendulum_ODE(
+        t: float,
+        y: NDArray, 
+        params: DPendulumParameters
+    ) -> NDArray:
     """
     System of ODEs representing the motion of a double pendulum
     """

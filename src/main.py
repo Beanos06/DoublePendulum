@@ -1,9 +1,8 @@
-import matplotlib.pyplot as plt
 from pendulum import DoublePendulum, DPendulumParameters
-import numpy as np
 from physics.double_pendulum import double_pendulum_ODE
+import numpy as np
 
-# Create time points and initial conditions
+# Initial Conditions and Parameters of the Double Pendulum
 G = 9.81
 THETA1 = np.pi
 THETA2 = 2
