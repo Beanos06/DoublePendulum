@@ -27,7 +27,6 @@ DP1 = DoublePendulum(
     params=parameters,
     func=double_pendulum_ODE,
     dt=0.01,
-    color='blue'
 )
 
 for i in range(0, 100):
