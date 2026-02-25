@@ -46,4 +46,4 @@ class DoublePendulum:
         )
         self.t += self.dt
         self.theta1, self.vel1, self.theta2, self.vel2 = self.y
-        return self.y
+        return self.y, self.params
