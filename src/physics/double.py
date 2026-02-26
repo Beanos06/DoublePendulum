@@ -5,7 +5,7 @@ from numpy.typing import NDArray
 import numpy as np
 
 """
-Contains all the physics and math necessary to process the simulation.
+Contains all the physics and math necessary for a double pendulum
 """
 
 # Create sympy variables
