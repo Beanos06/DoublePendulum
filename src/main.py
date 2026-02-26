@@ -26,6 +26,7 @@ L_2 = 1
 M_1 = 5
 M_2 = 5
 
+# Parameters for double pendulum
 parameters = DPendulumParameters(
     l1 = L_1,
     l2 = L_2,
@@ -43,8 +44,7 @@ dbl_pend = DoublePendulum(
     color=(255,255,255)
 )
 
-# list(np.random.choice(range(256), size=3))
-
+# Main game loop
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
