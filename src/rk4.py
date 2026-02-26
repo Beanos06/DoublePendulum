@@ -1,0 +1,19 @@
+from numpy.typing import NDArray
+from typing import Callable
+
+def rk4_step(
+        f: Callable, 
+        y: NDArray, 
+        t: float, 
+        dt: float, 
+        *args
+    ) -> NDArray:
+    """
+    Fourth order Runge-Kutta
+    """
+    r1 = f(t, y, *args)
+    r2 = f(t + dt/2, y + dt/2 * r1, *args)
+    r3 = f(t + dt/2, y + dt/2 * r2, *args)
+    r4 = f(t + dt, y + dt * r3, *args)
+
+    return y + (r1 + 2*r2 + 2*r3 + r4) * dt / 6

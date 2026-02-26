@@ -1,5 +1,8 @@
+from pendulum import DPendulumParameters
 from sympy import diff, sin, cos
 import sympy as sm
+from numpy.typing import NDArray
+import numpy as np
 
 """
 Contains all the physics and math necessary to process the simulation.
@@ -64,13 +67,23 @@ solutions = sm.solve([EL_eq1, EL_eq2], theta1_dd, theta2_dd)
 EL_fn1 = sm.lambdify((theta1, theta2, theta1_d, theta2_d, t, l_1, l_2, m_1, m_2, g), solutions[theta1_dd])
 EL_fn2 = sm.lambdify((theta1, theta2, theta1_d, theta2_d, t, l_1, l_2, m_1, m_2, g), solutions[theta2_dd])
 
-def system_of_odes(y, t, l_1, l_2, m_1, m_2, g):
+def double_pendulum_ODE(
+        t: float,
+        y: NDArray, 
+        params: DPendulumParameters
+    ) -> NDArray:
     """
     System of ODEs representing the motion of a double pendulum
     """
     theta1, theta1_d, theta2, theta2_d = y
+
+    l_1 = params.l1
+    l_2 = params.l2
+    m_1 = params.m1
+    m_2 = params.m2
+    g = params.g
     
     theta1_dd = EL_fn1(theta1, theta2, theta1_d, theta2_d, t, l_1, l_2, m_1, m_2, g)
     theta2_dd = EL_fn2(theta1, theta2, theta1_d, theta2_d, t, l_1, l_2, m_1, m_2, g)
     
-    return [theta1_d, theta1_dd, theta2_d, theta2_dd]
+    return np.array([theta1_d, theta1_dd, theta2_d, theta2_dd])

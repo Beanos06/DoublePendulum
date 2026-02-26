@@ -4,9 +4,13 @@ Pendulum Classes
 
 from dataclasses import dataclass
 import numpy as np
-from scipy.integrate import odeint
-from physics import system_of_odes
+from numpy.typing import NDArray
+from rk4 import rk4_step
+from typing import Callable
+import pygame
+import math
 
+# Dataclass to store the parameters for the double pendulum
 @dataclass
 class DPendulumParameters:
     l1: float
@@ -16,76 +20,57 @@ class DPendulumParameters:
     g: float = 9.81
     
 class DoublePendulum:
-    def __init__(self, initial_conditions, params, time_points, ax, color):
-        self.initial_conditions = initial_conditions
-        self.theta1 = initial_conditions[0]
-        self.vel1 = initial_conditions[1]
-        self.theta2 = initial_conditions[2]
-        self.vel2 = initial_conditions[3]
+    def __init__(
+            self, 
+            initial_conditions: list, 
+            func: Callable[[float, NDArray, DPendulumParameters], NDArray], 
+            params: DPendulumParameters, 
+            dt: float,
+            color
+        ):
+        self.y = np.array(initial_conditions, dtype=float)
+        self.theta1, self.vel1, self.theta2, self.vel2 = self.y
         
         self.params = params
-        self.time_points = time_points
-        self.ax = ax
+        self.func = func
+        self.t = 0
+        self.dt = dt
         self.color = color
+
+    def update(self):
+        """
+        Update state of double pendulum for timestep dt
+        """
         
-        self.solution = odeint(
-            system_of_odes,
-            self.initial_conditions,
-            time_points,
-            args=(
-                params.l1, 
-                params.l2,
-                params.m1,
-                params.m2, 
-                params.g
-            )
+        self.y = rk4_step(
+            self.func,
+            self.y,
+            self.t,
+            self.dt,
+            self.params
         )
-        
-        self.the1_sol = self.solution[:, 0]
-        self.the1_d_sol = self.solution[:, 1]
-
-        self.the2_sol = self.solution[:, 2]
-        self.the2_d_sol = self.solution[:, 3]
-
-        self.x1 = params.l1 * np.sin(self.the1_sol)
-        self.y1 = -params.l1 * np.cos(self.the1_sol)
-
-        self.x2 = self.x1 + params.l1 * np.sin(self.the2_sol)
-        self.y2 = self.y1 - params.l1 * np.cos(self.the2_sol)
-        
+        self.t += self.dt
+        self.theta1, self.vel1, self.theta2, self.vel2 = self.y
+        return self.y
     
-    def load(self, display_data=False):    
-        # Load in the double pendulum
-        self.pendulum1, = self.ax.plot([0, self.x1[0]], [0, self.y1[0]], color=self.color, lw=2)
-        self.mass1, = self.ax.plot([self.x1[0]], [self.y1[0]], 'o', markersize=2*self.params.m1, color=self.color)
+    def draw(self, screen, center):
+        """
+        Draws current state of double pendulum on pygame screen
+        """
 
-        self.pendulum2, = self.ax.plot([self.x1[0], self.x2[0]], [self.y1[0], self.y2[0]], color=self.color, lw=2)
-        self.mass2, = self.ax.plot([self.x2[0]], [self.y2[0]], 'o', markersize=2*self.params.m2, color=self.color)
-        
-        self.display_data = display_data
-        if display_data:
-            self.theta1_text = self.ax.text(
-                0.95, 0.05, f'θ1: {self.the1_sol[0]}',
-                verticalalignment='bottom', horizontalalignment='right',
-                transform=self.ax.transAxes,
-                color='green', fontsize=10)
-            self.theta2_text = self.ax.text(
-                0.95, 0.01, f'θ2: {self.the2_sol[0]}',
-                verticalalignment='bottom', horizontalalignment='right',
-                transform=self.ax.transAxes,
-                color='green', fontsize=10)
+        # Coordinates of anchor point (x0, y0)
+        x0, y0 = center
 
-        
-    def update(self, frame):
-        # Update the positions of the masses and pendulum legs for each frame
-        self.pendulum1.set_data([0, self.x1[frame]], [0, self.y1[frame]])
-        self.mass1.set_data([self.x1[frame]], [self.y1[frame]])
+        # Coordinates of first mass (x1, y1)
+        x1 = center[0] - self.params.l1 * 100 * math.cos(self.theta1 + np.pi/2)
+        y1 = center[1] + self.params.l2 * 100 * math.sin(self.theta1 + np.pi/2)
 
-        self.pendulum2.set_data([self.x1[frame], self.x2[frame]], [self.y1[frame], self.y2[frame]])
-        self.mass2.set_data([self.x2[frame]], [self.y2[frame]])
-        
-        if self.display_data:
-            self.theta1_text.set_text(f'θ1: {self.the1_sol[frame]:.3f}')
-            self.theta2_text.set_text(f'θ2: {self.the2_sol[frame]:.3f}')
-        
-        return  self.pendulum1, self.mass1, self.pendulum2, self.mass2    
+        # Coordinates of second mass (x2, y2)
+        x2 = x1 - self.params.l2 * 100 * math.cos(self.theta2 + np.pi/2)
+        y2 = y1 + self.params.l2 * 100 * math.sin(self.theta2 + np.pi/2)
+
+        pygame.draw.circle(screen, self.color, (x0,y0), radius=6)
+        pygame.draw.line(screen, self.color, (x0,y0), (x1,y1), 2)
+        pygame.draw.circle(screen, self.color, (x1, y1), radius=6)
+        pygame.draw.line(screen, self.color, (x1, y1), (x2, y2), 2)
+        pygame.draw.circle(screen, self.color, (x2, y2), radius=6)

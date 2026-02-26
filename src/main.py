@@ -1,13 +1,24 @@
-from matplotlib.animation import FuncAnimation, PillowWriter
-import matplotlib.pyplot as plt
 from pendulum import DoublePendulum, DPendulumParameters
+from physics.double_pendulum import double_pendulum_ODE
 import numpy as np
+import math
+import pygame
+from sys import exit
 
-# Create time points and initial conditions
-time_points = np.linspace(0, 20, 1000)
+# Pygame Initialization
+
+pygame.init()
+WIDTH = 1000
+HEIGHT = 600
+CENTER = (WIDTH/2, HEIGHT/2)
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Double Pendulum Simulation")
+clock = pygame.time.Clock()
+
+# Initial Conditions and Parameters of the Double Pendulum
 G = 9.81
-THETA1 = np.pi
-THETA2 = 2
+THETA1 = np.pi/2
+THETA2 = 0
 VEL1 = 0
 VEL2 = 0
 L_1 = 1
@@ -15,36 +26,35 @@ L_2 = 1
 M_1 = 5
 M_2 = 5
 
-fig, ax = plt.subplots()
-plt.axis('equal')
-ax.set_xlim(-3, 3)
-ax.set_ylim(-3, 3)
-
+# Parameters for double pendulum
 parameters = DPendulumParameters(
     l1 = L_1,
     l2 = L_2,
     m1 = M_1,
     m2 = M_2
 )
-DP1 = DoublePendulum(
-    initial_conditions=[THETA1, VEL1, THETA2, VEL2],
-    params=parameters,
-    time_points=time_points,
-    ax=ax,
-    color='blue'
+
+initial_conditions = [THETA1, VEL1, THETA2, VEL2]
+
+dbl_pend = DoublePendulum(
+    initial_conditions,
+    double_pendulum_ODE,
+    parameters,
+    dt=0.01,
+    color=(255,255,255)
 )
 
-theta1 = DP1.load()
-
-# Matplotlib animation
-def update(frame):
-    DP1.update(frame)
+# Main game loop
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            exit()
     
-
-animation = FuncAnimation(fig, update, frames=len(time_points), interval=15)
-
-# Run the following code to save the simulation as a gif
-# animation.save("simulation.gif", writer=PillowWriter(fps=25))
-
-plt.show()
+    screen.fill((0,0,0))
     
+    dbl_pend.update()
+    dbl_pend.draw(screen, CENTER)
+    
+    pygame.display.update()
+    clock.tick(60)
