@@ -4,6 +4,7 @@ from physics.sliding_single import sliding_simple_pendulum_ODE
 import numpy as np
 import pygame
 from sys import exit
+from components.button import Button
 
 # Pygame Initialization
 
@@ -11,6 +12,8 @@ pygame.init()
 WIDTH = 1000
 HEIGHT = 600
 CENTER = (WIDTH/2, HEIGHT/2)
+H_PADDING = 10
+V_PADDING = 10
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Pendulum Simulation")
 clock = pygame.time.Clock()
@@ -53,18 +56,30 @@ sliding_pendulum = SlidingSimplePendulum(
 )
 pendulums.append(sliding_pendulum)
 
+reset_button = Button((60,20), "Reset", [0+H_PADDING,0+V_PADDING], screen, bgColor=(255,237,41), txtColor=(0,0,0))
+close_button = Button((60,20), "Close", [WIDTH-60-H_PADDING, 0+V_PADDING], screen, bgColor=(255,44,44), txtColor=(0,0,0))
+
 # Main game loop
 while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            exit()
+    events = pygame.event.get()
     
     screen.fill((0,0,0))
     
     for dbl_pend in pendulums:
         dbl_pend.update()
         dbl_pend.draw(screen, CENTER)
+
+        if reset_button.clicked(events):
+            print("Reset")
+            dbl_pend.reset()
+        
+        if close_button.clicked(events):
+            pygame.quit()
+            exit()
+            print("Closed application")
+
+    reset_button.render()
+    close_button.render()
 
     keys = pygame.key.get_pressed()
 
@@ -78,4 +93,4 @@ while True:
             pend.force = 0
     
     pygame.display.update()
-    clock.tick(60)
+    clock.tick(100)

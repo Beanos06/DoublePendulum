@@ -36,6 +36,13 @@ class DoublePendulum:
         self.t = 0
         self.dt = dt
         self.color = color
+        self.stored_conditions = initial_conditions
+
+    def reset(self):
+        self.t = 0
+        self.y = np.array(self.initial_conditions, dtype=float)
+        self.x, self.vel_x, self.theta, self.vel_theta = self.y
+        self.force=0
 
     def update(self):
         """
@@ -101,6 +108,12 @@ class SlidingSimplePendulum:
         self.params = params
         self.dt = dt
         self.color = color
+
+    def reset(self):
+        self.t = 0
+        self.y = np.array(self.initial_conditions, dtype=float)
+        self.x, self.vel_x, self.theta, self.vel_theta = self.y
+        self.force=0
 
     def update(self):
         """
