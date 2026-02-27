@@ -68,7 +68,7 @@ def sliding_simple_pendulum_ODE(
     theta_dd = -(params.g * np.sin(theta) - x_dd * np.cos(theta)) / params.l
     
     # 3. Add some "air resistance" to the pendulum so it eventually stops swinging
-    damping = 0.1
+    damping = 0.2
     theta_dd -= damping * theta_d
 
     return np.array([x_d, x_dd, theta_d, theta_dd])

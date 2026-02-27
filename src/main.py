@@ -27,25 +27,34 @@ VEL2 = 0
 L_1 = 1
 L_2 = 1
 M_1 = 5
-M_2 = 5
+M_2 = 10
 
 # Parameters for double pendulum
-parameters = DPendulumParameters(
+double_pend_parameters = DPendulumParameters(
     l1 = L_1,
     l2 = L_2,
     m1 = M_1,
     m2 = M_2
 )
-
+# Parameters for sliding pendulum
 sliding_pend_parameters = SSPendulumParameters(
-    l = 1,
+    l = 2,
     m1 = 5,
-    m2 = 5,
+    m2 = 10,
 )
 
 initial_conditions = [THETA1, VEL1, THETA2, VEL2]
 initial_conditions2 = [0, 0, 0, 0]
 pendulums = []
+
+double_pendulum = DoublePendulum(
+    initial_conditions=initial_conditions,
+    func=double_pendulum_ODE,
+    params=double_pend_parameters,
+    dt=0.01,
+    color=(255,255,255)
+)
+pendulums.append(double_pendulum)
 
 sliding_pendulum = SlidingSimplePendulum(
     initial_conditions2,
@@ -58,39 +67,46 @@ pendulums.append(sliding_pendulum)
 
 reset_button = Button((60,20), "Reset", [0+H_PADDING,0+V_PADDING], screen, bgColor=(255,237,41), txtColor=(0,0,0))
 close_button = Button((60,20), "Close", [WIDTH-60-H_PADDING, 0+V_PADDING], screen, bgColor=(255,44,44), txtColor=(0,0,0))
+change_sim_button = Button((195, 20), "Change Simulation",  [close_button.size[0] + 20, 0+V_PADDING], screen, bgColor=(173, 216, 230), txtColor=(0,0,0))
+
+pendulum_id = 0
 
 # Main game loop
 while True:
     events = pygame.event.get()
+    pendulum = pendulums[pendulum_id]
     
     screen.fill((0,0,0))
-    
-    for dbl_pend in pendulums:
-        dbl_pend.update()
-        dbl_pend.draw(screen, CENTER)
-
-        if reset_button.clicked(events):
-            print("Reset")
-            dbl_pend.reset()
-        
-        if close_button.clicked(events):
-            pygame.quit()
-            exit()
-            print("Closed application")
-
     reset_button.render()
     close_button.render()
+    change_sim_button.render()
+    
+    pendulum.update()
+    pendulum.draw(screen, CENTER)
+
+    if reset_button.clicked(events):
+        print(f"Reset {pendulum}")
+        pendulum.reset()
+    
+    if change_sim_button.clicked(events):
+        pendulum_id += 1
+        if pendulum_id >= len(pendulums):
+            pendulum_id = 0
+    
+    if close_button.clicked(events):
+        pygame.quit()
+        print("Closed application")
+        exit()
 
     keys = pygame.key.get_pressed()
 
     # Moving the cart left or right
-    for pend in pendulums:
-        if keys[pygame.K_LEFT]:
-            pend.force = -30
-        elif keys[pygame.K_RIGHT]:
-            pend.force = 30
-        else:
-            pend.force = 0
+    if keys[pygame.K_LEFT]:
+        pendulum.force = -30
+    elif keys[pygame.K_RIGHT]:
+        pendulum.force = 30
+    else:
+        pendulum.force = 0
     
     pygame.display.update()
     clock.tick(100)

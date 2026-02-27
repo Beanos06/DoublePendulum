@@ -29,6 +29,7 @@ class DoublePendulum:
             color
         ):
         self.y = np.array(initial_conditions, dtype=float)
+        self.initial_conditions = initial_conditions
         self.theta1, self.vel1, self.theta2, self.vel2 = self.y
         
         self.params = params
@@ -78,9 +79,9 @@ class DoublePendulum:
 
         pygame.draw.circle(screen, self.color, (x0,y0), radius=6)
         pygame.draw.line(screen, self.color, (x0,y0), (x1,y1), 2)
-        pygame.draw.circle(screen, self.color, (x1, y1), radius=6)
+        pygame.draw.circle(screen, self.color, (x1, y1), radius=self.params.m1)
         pygame.draw.line(screen, self.color, (x1, y1), (x2, y2), 2)
-        pygame.draw.circle(screen, self.color, (x2, y2), radius=6)
+        pygame.draw.circle(screen, self.color, (x2, y2), radius=self.params.m2)
 
 @dataclass
 class SSPendulumParameters:
@@ -145,6 +146,6 @@ class SlidingSimplePendulum:
         y1 = y0 + self.params.l * 100 * math.cos(self.theta)
 
         pygame.draw.line(screen, (150,150,150), (0, center[1]), (center[0] * 2, center[1]), 1)
-        pygame.draw.circle(screen, self.color, (x0,y0), radius=12)
+        pygame.draw.circle(screen, self.color, (x0,y0), radius=self.params.m1)
         pygame.draw.line(screen, self.color, (x0,y0), (x1,y1), 2)
-        pygame.draw.circle(screen, self.color, (x1, y1), radius=6)
+        pygame.draw.circle(screen, self.color, (x1, y1), radius=self.params.m2)
