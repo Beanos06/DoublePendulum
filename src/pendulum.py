@@ -5,7 +5,8 @@ Pendulum Classes
 from dataclasses import dataclass
 import numpy as np
 from numpy.typing import NDArray
-from rk4 import rk4_step
+from math_utils.rk4 import rk4_step
+from math_utils.radians import simplify_rad
 from typing import Callable
 import pygame
 import math
@@ -83,6 +84,13 @@ class DoublePendulum:
         pygame.draw.line(screen, self.color, (x1, y1), (x2, y2), 2)
         pygame.draw.circle(screen, self.color, (x2, y2), radius=self.params.m2)
 
+    def display_data(self, screen, center, scale):
+        font = pygame.font.Font(pygame.font.get_default_font(), scale)
+        theta1 = font.render(f"θ1: {simplify_rad(self.theta1):.2f} rad", True, (255,255,255))
+        theta2 = font.render(f"θ2: {simplify_rad(self.theta2):.2f} rad", True, (255,255,255))
+        screen.blit(theta1, (0, 2*center[1] - scale))
+        screen.blit(theta2, (0, 2*center[1] - 2*scale))
+
 @dataclass
 class SSPendulumParameters:
     m1: float
@@ -145,7 +153,15 @@ class SlidingSimplePendulum:
         x1 = x0 - self.params.l * 100 * math.sin(self.theta)
         y1 = y0 + self.params.l * 100 * math.cos(self.theta)
 
-        pygame.draw.line(screen, (150,150,150), (0, center[1]), (center[0] * 2, center[1]), 1)
+        pygame.draw.line(screen, (100,100,100), (center[0], 0), (center[0], 2* center[1]), 1)
+        pygame.draw.line(screen, (150,150,150), (0, center[1]), (center[0] * 2, center[1]), 2)
         pygame.draw.circle(screen, self.color, (x0,y0), radius=self.params.m1)
         pygame.draw.line(screen, self.color, (x0,y0), (x1,y1), 2)
         pygame.draw.circle(screen, self.color, (x1, y1), radius=self.params.m2)
+
+    def display_data(self, screen, center, scale):
+        font = pygame.font.Font(pygame.font.get_default_font(), scale)
+        x_pos = font.render(f"x: {self.x:.2f} m", True, (255,255,255))
+        theta = font.render(f"θ: {simplify_rad(self.theta):.2f} rad", True, (255,255,255))
+        screen.blit(x_pos, (0, 2*center[1] - scale))
+        screen.blit(theta, (0, 2*center[1] - 2*scale))

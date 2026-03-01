@@ -27,7 +27,7 @@ VEL2 = 0
 L_1 = 1
 L_2 = 1
 M_1 = 5
-M_2 = 10
+M_2 = 5
 
 # Parameters for double pendulum
 double_pend_parameters = DPendulumParameters(
@@ -38,9 +38,9 @@ double_pend_parameters = DPendulumParameters(
 )
 # Parameters for sliding pendulum
 sliding_pend_parameters = SSPendulumParameters(
-    l = 2,
+    l = 1.5,
     m1 = 5,
-    m2 = 10,
+    m2 = 5,
 )
 
 initial_conditions = [THETA1, VEL1, THETA2, VEL2]
@@ -83,6 +83,7 @@ while True:
     
     pendulum.update()
     pendulum.draw(screen, CENTER)
+    pendulum.display_data(screen, CENTER, 12)
 
     if reset_button.clicked(events):
         print(f"Reset {pendulum}")
@@ -102,9 +103,9 @@ while True:
 
     # Moving the cart left or right
     if keys[pygame.K_LEFT]:
-        pendulum.force = -30
+        pendulum.force = -50
     elif keys[pygame.K_RIGHT]:
-        pendulum.force = 30
+        pendulum.force = 50
     else:
         pendulum.force = 0
     
