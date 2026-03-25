@@ -36,10 +36,18 @@ L = T - V
 
 F = sm.symbols('F')
 
-EL_1 = diff(L, x) - diff(diff(L, x_d), t) - F
-EL_2 = diff(L, theta) - diff(diff(L, theta_d), t).simplify()
+EL_1 = diff(diff(L, x_d), t) - diff(L, x) - F
+EL_2 = diff(diff(L, theta_d), t) - diff(L, theta).simplify()
 
 solutions = sm.solve([EL_1, EL_2], x_dd, theta_dd)
+
+# Print out the Euler-Lagrange Equations
+# print()
+# print(">>>>>>>>>> Euler-Lagrange Equation 1")
+# print(EL_1)
+# print()
+# print(">>>>>>>>>> Euler-Lagrange Equation 2")
+# print(EL_2)
 
 EL_fn1 = sm.lambdify((x, x_d, theta, theta_d, t, l, m1, m2, g, F),solutions[x_dd])
 EL_fn2 = sm.lambdify((x, x_d, theta, theta_d, t, l, m1, m2, g, F),solutions[theta_dd])
@@ -61,14 +69,7 @@ def sliding_simple_pendulum_ODE(
     m2 = params.m2
     g = params.g
     
-    # x_dd = EL_fn1(x, x_d, theta, theta_d, t, l, m1, m2, g, F)
-    # theta_dd = EL_fn2(x, x_d, theta, theta_d, t, l, m1, m2, g, F)
-
-    x_dd = F / m1
-    theta_dd = -(params.g * np.sin(theta) - x_dd * np.cos(theta)) / params.l
-    
-    # 3. Add some "air resistance" to the pendulum so it eventually stops swinging
-    damping = 0.2
-    theta_dd -= damping * theta_d
+    x_dd = EL_fn1(x, x_d, theta, theta_d, t, l, m1, m2, g, F)
+    theta_dd = EL_fn2(x, x_d, theta, theta_d, t, l, m1, m2, g, F)
 
     return np.array([x_d, x_dd, theta_d, theta_dd])

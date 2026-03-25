@@ -54,11 +54,19 @@ L = T - V
 
 dL_dtheta1 = diff(L, theta1)
 dL_dtheta1_d = diff(L, theta1_d)
-EL_eq1 = ( dL_dtheta1 - diff(dL_dtheta1_d, t) ).simplify()
+EL_eq1 = ( diff(dL_dtheta1_d, t) - dL_dtheta1 ).simplify()
 
 dL_dtheta2 = diff(L, theta2)
 dL_dtheta2_d = diff(L, theta2_d)
-EL_eq2 = ( dL_dtheta2 - diff(dL_dtheta2_d, t) ).simplify()
+EL_eq2 = (  diff(dL_dtheta2_d, t) - dL_dtheta2 ).simplify()
+
+# Print out the Euler-Lagrange Equations
+# print()
+# print(">>>>>>>>>> Euler-Lagrange Equation 1")
+# print(EL_1)
+# print()
+# print(">>>>>>>>>> Euler-Lagrange Equation 2")
+# print(EL_2)
 
 # Solve the two Euler-Lagrange equations for theta1_dd, theta2_dd, since we need first order differential equations
 solutions = sm.solve([EL_eq1, EL_eq2], theta1_dd, theta2_dd)

@@ -39,7 +39,7 @@ double_pend_parameters = DPendulumParameters(
 # Parameters for sliding pendulum
 sliding_pend_parameters = SSPendulumParameters(
     l = 1.5,
-    m1 = 5,
+    m1 = 10,
     m2 = 5,
 )
 
@@ -80,10 +80,6 @@ while True:
     reset_button.render()
     close_button.render()
     change_sim_button.render()
-    
-    pendulum.update()
-    pendulum.draw(screen, CENTER)
-    pendulum.display_data(screen, CENTER, 12)
 
     if reset_button.clicked(events):
         print(f"Reset {pendulum}")
@@ -108,6 +104,10 @@ while True:
         pendulum.force = 50
     else:
         pendulum.force = 0
+        
+    pendulum.update()
+    pendulum.draw(screen, CENTER)
+    pendulum.display_data(screen, CENTER, 12)
     
     pygame.display.update()
     clock.tick(100)

@@ -150,7 +150,7 @@ class SlidingSimplePendulum:
         y0 = center[1]
 
         # Coordinates of suspended mass
-        x1 = x0 - self.params.l * 100 * math.sin(self.theta)
+        x1 = x0 + self.params.l * 100 * math.sin(self.theta)
         y1 = y0 + self.params.l * 100 * math.cos(self.theta)
 
         pygame.draw.line(screen, (100,100,100), (center[0], 0), (center[0], 2* center[1]), 1)
