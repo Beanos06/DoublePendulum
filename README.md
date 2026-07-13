@@ -20,7 +20,7 @@
       <a href="#installation">Installation</a>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#contributions">Contributions</a></li>
+    <li><a href="#contributiors">Contributiors</a></li>
   </ol>
 </details>
 
