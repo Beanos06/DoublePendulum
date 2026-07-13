@@ -63,10 +63,10 @@ EL_eq2 = (  diff(dL_dtheta2_d, t) - dL_dtheta2 ).simplify()
 # Print out the Euler-Lagrange Equations
 # print()
 # print(">>>>>>>>>> Euler-Lagrange Equation 1")
-# print(EL_1)
+# print(EL_eq1)
 # print()
 # print(">>>>>>>>>> Euler-Lagrange Equation 2")
-# print(EL_2)
+# print(EL_eq2)
 
 # Solve the two Euler-Lagrange equations for theta1_dd, theta2_dd, since we need first order differential equations
 solutions = sm.solve([EL_eq1, EL_eq2], theta1_dd, theta2_dd)

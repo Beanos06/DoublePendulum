@@ -39,7 +39,7 @@ double_pend_parameters = DPendulumParameters(
 # Parameters for sliding pendulum
 sliding_pend_parameters = SSPendulumParameters(
     l = 1.5,
-    m1 = 10,
+    m1 = 5,
     m2 = 5,
 )
 
